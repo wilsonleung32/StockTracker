@@ -43,9 +43,8 @@ app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 dbStore.sync();
-db.sync({ force: true }) // sync our database
-  .then(() => {
-    app.listen(port, () => {
-      console.log(`Starting server ${port}`);
-    });
+db.sync().then(() => {
+  app.listen(port, () => {
+    console.log(`Starting server ${port}`);
   });
+});

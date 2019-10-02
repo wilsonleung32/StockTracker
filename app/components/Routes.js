@@ -7,6 +7,11 @@ export default class Routes extends React.Component {
     super();
   }
   render() {
-    return <Route path="/login" component={Auth} />;
+    return (
+      <Switch>
+        <Route path="/login" component={Auth} />
+        <Route path="/signup" component={Auth} />
+      </Switch>
+    );
   }
 }
