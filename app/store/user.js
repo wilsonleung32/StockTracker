@@ -6,18 +6,27 @@ const getUser = user => ({ type: GET_USER, user });
 
 export const login = credentials => async dispatch => {
   try {
-    const res = await axios.put(`/login`, credentials);
+    const res = await axios.put('/login', credentials);
     dispatch(getUser(res.data));
-  } catch (authError) {
-    return dispatch(getUser({ error: authError }));
+  } catch (error) {
+    console.error(error);
   }
 };
 export const signup = credentials => async dispatch => {
   try {
-    const res = await axios.post(`/signup`, credentials);
+    const res = await axios.post('/signup', credentials);
     dispatch(getUser(res.data));
-  } catch (authError) {
-    return dispatch(getUser({ error: authError }));
+  } catch (error) {
+    console.error(error);
+  }
+};
+export const getLoggedIn = () => async dispatch => {
+  try {
+    const { data } = await axios.get('/me');
+    console.log(data);
+    dispatch(getUser(data));
+  } catch (error) {
+    console.error(error);
   }
 };
 

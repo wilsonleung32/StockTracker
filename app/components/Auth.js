@@ -2,13 +2,10 @@ import React from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { login, signup } from '../store/user';
+import { Redirect } from 'react-router-dom';
 class Auth extends React.Component {
   constructor() {
     super();
-    this.state = {
-      email: '',
-      password: ''
-    };
   }
 
   render() {
@@ -28,7 +25,7 @@ class Auth extends React.Component {
             <button type="submit"> Update</button>
           </form>
         ) : (
-          <div>hello {this.props.user.email}</div>
+          <Redirect to="/portfolio" />
         )}
       </div>
     );
