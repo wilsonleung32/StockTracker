@@ -7,15 +7,16 @@ import {
   Header,
   Input
 } from 'semantic-ui-react';
+import { connect } from 'react-redux';
 
 const Stocks = props => {
-  console.log(props.stock);
+  const totalCost = (
+    parseFloat(props.stock['05. price']) * props.quantity
+  ).toFixed(2);
   return (
     <Container>
       <Header as="h1">{props.stock['01. symbol']}</Header>
-      <p>
-        {(parseFloat(props.stock['05. price']) * props.quantity).toFixed(2)}
-      </p>
+      <p>{totalCost}</p>
       <Input
         type="number"
         name="quantity"
@@ -24,6 +25,7 @@ const Stocks = props => {
       />
       <Button
         onClick={() => props.buy({ ...props.stock, quantity: props.quantity })}
+        disabled={props.cash < totalCost}
       >
         Buy
       </Button>

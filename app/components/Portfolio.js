@@ -5,14 +5,19 @@ import { getStocksThunk, buyStockThunk } from '../store/stock';
 import { Stocks, Buy } from './';
 import {
   Grid,
-  Image,
-  Form,
+  Divider,
+  Input,
   Button,
-  Header,
   Modal,
   Container
 } from 'semantic-ui-react';
 import axios from 'axios';
+
+const centering = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center'
+};
 class Portfolio extends React.Component {
   constructor() {
     super();
@@ -22,7 +27,7 @@ class Portfolio extends React.Component {
       quantity: 1
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.search = this.search.bind(this);
   }
   componentDidMount() {
     this.props.getUser();
@@ -32,44 +37,13 @@ class Portfolio extends React.Component {
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   }
-  async handleSubmit(event) {
-    event.preventDefault();
+  async search() {
     const { data } = await axios.get(`/stocks/${this.state.ticker}`);
-
     this.setState({ stock: data['Global Quote'] });
   }
   render() {
     return (
       <Container>
-        <Container>
-          <Form onSubmit={this.handleSubmit}>
-            <Form.Input
-              placeholder="Ticker"
-              name="ticker"
-              type="string"
-              value={this.state.ticker}
-              onChange={this.handleChange}
-            />
-            <Button type="submit">Search</Button>
-          </Form>
-          <Modal
-            trigger={
-              <Button disabled={!this.state.stock['01. symbol']}>
-                Purchase
-              </Button>
-            }
-          >
-            <Modal.Content>
-              <Buy
-                stock={this.state.stock}
-                buy={this.props.buyStock}
-                cash={this.props.user.cash}
-                quantity={this.state.quantity}
-                handleChange={this.handleChange}
-              />
-            </Modal.Content>
-          </Modal>
-        </Container>
         <Grid>
           <Grid.Row>
             <Grid.Column>
@@ -86,6 +60,28 @@ class Portfolio extends React.Component {
             <Stocks key={idx} stock={stock} />
           ))}
         </Grid>
+
+        <Container style={centering}>
+          <Input
+            placeholder="Ticker"
+            name="ticker"
+            type="string"
+            value={this.state.ticker}
+            onChange={this.handleChange}
+          />
+
+          <Modal trigger={<Button onClick={this.search}>Purchase</Button>}>
+            <Modal.Content>
+              <Buy
+                stock={this.state.stock}
+                buy={this.props.buyStock}
+                cash={this.props.user.cash}
+                quantity={this.state.quantity}
+                handleChange={this.handleChange}
+              />
+            </Modal.Content>
+          </Modal>
+        </Container>
       </Container>
     );
   }

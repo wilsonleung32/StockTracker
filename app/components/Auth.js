@@ -12,6 +12,7 @@ class Auth extends React.Component {
   render() {
     return !this.props.user.email ? (
       <Form
+        className="login"
         onSubmit={event =>
           this.props.handleSubmit(event, this.props.location.pathname)
         }

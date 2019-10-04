@@ -3,3 +3,26 @@ main {
   align-items: center;
   justify-content: center;
 }
+
+nav {
+  display: flex;
+  justify-content: space-evenly;
+
+  margin: 1em;
+}
+.login {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em;
+}
+/* .ui.container {
+  display: flex;
+}
+.ui.container.ticker {
+  width: 45%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1em;
+} */

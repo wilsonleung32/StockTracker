@@ -9,11 +9,13 @@ export default class Routes extends React.Component {
   render() {
     return (
       <main>
-        <Switch>
-          <Route path="/login" component={Auth} />
-          <Route path="/signup" component={Auth} />
-          <Route path="/portfolio" component={Portfolio} />
-        </Switch>
+        <div className="major">
+          <Switch>
+            <Route path="/login" component={Auth} />
+            <Route path="/signup" component={Auth} />
+            <Route path="/portfolio" component={Portfolio} />
+          </Switch>
+        </div>
       </main>
     );
   }
