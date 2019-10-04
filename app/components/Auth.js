@@ -3,31 +3,29 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { login, signup } from '../store/user';
 import { Redirect } from 'react-router-dom';
+import { Button, Checkbox, Form } from 'semantic-ui-react';
 class Auth extends React.Component {
   constructor() {
     super();
   }
 
   render() {
-    console.log(this.props.location.pathname);
-    return (
-      <div>
-        {!this.props.user.email ? (
-          <form
-            onSubmit={event =>
-              this.props.handleSubmit(event, this.props.location.pathname)
-            }
-          >
-            <label htmlFor="email">Email</label>
-            <input type="text" name="email" />
-            <label htmlFor="password">password</label>
-            <input type="password" name="password" />
-            <button type="submit"> Update</button>
-          </form>
-        ) : (
-          <Redirect to="/portfolio" />
-        )}
-      </div>
+    return !this.props.user.email ? (
+      <Form
+        onSubmit={event =>
+          this.props.handleSubmit(event, this.props.location.pathname)
+        }
+      >
+        <Form.Field>
+          <Form.Input placeholder="Email" name="email" type="string" />
+        </Form.Field>
+        <Form.Field>
+          <Form.Input placeholder="password" name="password" type="password" />
+        </Form.Field>
+        <Button type="submit">Login</Button>
+      </Form>
+    ) : (
+      <Redirect to="/portfolio" />
     );
   }
 }

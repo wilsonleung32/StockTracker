@@ -5,8 +5,25 @@ const axios = require('axios');
 
 router.get('/all', async (req, res, next) => {
   try {
-    const stocks = await Stock.findAll({ where: { userId: +req.user.id } });
-    res.json(stocks);
+    const stockNames = await Stock.findAll({ where: { userId: +req.user.id } });
+
+    const allStocks = stockNames.map(stock => {
+      let ticker = stock.ticker;
+
+      const promise = axios.get(
+        `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=ESNDFL30LZMAZGOS`
+      );
+      return promise;
+    });
+
+    const cleanedStocks = await Promise.all(allStocks).then(function(array) {
+      return array.map((stock, idx) => ({
+        ...stock.data['Global Quote'],
+        quantity: stockNames[idx].quantity
+      }));
+    });
+
+    res.json(cleanedStocks);
   } catch (error) {
     next(error);
   }
@@ -29,7 +46,13 @@ router.post('/buy', async (req, res, next) => {
     });
 
     await stock[0].updateQuantity(Number(req.body.quantity));
-    res.json(stock);
+    const user = await User.findByPk(req.user.id);
+    user.cash -= (
+      parseFloat(req.body['05. price']) * Number(req.body.quantity)
+    ).toFixed(2);
+
+    await user.save();
+    res.json({ cash: user.cash });
   } catch (error) {
     next(error);
   }

@@ -1,6 +1,17 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { getLoggedIn } from '../store/user';
+import { getStocksThunk, buyStockThunk } from '../store/stock';
+import { Stocks, Buy } from './';
+import {
+  Grid,
+  Image,
+  Form,
+  Button,
+  Header,
+  Modal,
+  Container
+} from 'semantic-ui-react';
 import axios from 'axios';
 class Portfolio extends React.Component {
   constructor() {
@@ -15,6 +26,7 @@ class Portfolio extends React.Component {
   }
   componentDidMount() {
     this.props.getUser();
+    this.props.getStocks();
   }
 
   handleChange(event) {
@@ -26,61 +38,69 @@ class Portfolio extends React.Component {
 
     this.setState({ stock: data['Global Quote'] });
   }
-  async handleBuy(event) {
-    event.preventDefault();
-    const { data } = await axios.post('/stocks/buy', {
-      ...this.state.stock,
-      quantity: this.state.quantity
-    });
-  }
   render() {
-    console.log(this.state.stock);
     return (
-      <div>
-        {' '}
-        <form onSubmit={this.handleSubmit}>
-          <label htmlFor="ticker">Ticker</label>
-          <input
-            type="text"
-            name="ticker"
-            value={this.state.ticker}
-            onChange={this.handleChange}
-          />
-          <button type="submit"> Update</button>
-        </form>
-        {this.state.stock['01. symbol'] ? (
-          <div>
-            <p>{this.state.stock['01. symbol']}</p>
-            <form onSubmit={evt => this.handleBuy(evt)}>
-              <p>
-                {(
-                  Number(this.state.stock['05. price']) * this.state.quantity
-                ).toFixed(2)}
-              </p>
-              <input
-                type="number"
-                name="quantity"
-                value={this.state.quantity}
-                onChange={this.handleChange}
+      <Container>
+        <Container>
+          <Form onSubmit={this.handleSubmit}>
+            <Form.Input
+              placeholder="Ticker"
+              name="ticker"
+              type="string"
+              value={this.state.ticker}
+              onChange={this.handleChange}
+            />
+            <Button type="submit">Search</Button>
+          </Form>
+          <Modal
+            trigger={
+              <Button disabled={!this.state.stock['01. symbol']}>
+                Purchase
+              </Button>
+            }
+          >
+            <Modal.Content>
+              <Buy
+                stock={this.state.stock}
+                buy={this.props.buyStock}
+                cash={this.props.user.cash}
+                quantity={this.state.quantity}
+                handleChange={this.handleChange}
               />
-              <button type="submit"> Buy</button>
-            </form>
-          </div>
-        ) : (
-          ''
-        )}
-      </div>
+            </Modal.Content>
+          </Modal>
+        </Container>
+        <Grid>
+          <Grid.Row>
+            <Grid.Column>
+              <h3>Ticker</h3>
+            </Grid.Column>
+            <Grid.Column>
+              <h3>Shares</h3>
+            </Grid.Column>
+            <Grid.Column>
+              <h3>Value</h3>
+            </Grid.Column>
+          </Grid.Row>
+          {this.props.ownedStocks.map((stock, idx) => (
+            <Stocks key={idx} stock={stock} />
+          ))}
+        </Grid>
+      </Container>
     );
   }
 }
 const mapStateToProps = state => {
   return {
-    user: state.user
+    user: state.user,
+    ownedStocks: state.ownedStocks
   };
 };
 const mapDispatchToProps = dispatch => {
   return {
-    getUser: () => dispatch(getLoggedIn())
+    getUser: () => dispatch(getLoggedIn()),
+    getStocks: () => dispatch(getStocksThunk()),
+    buyStock: purchase => dispatch(buyStockThunk(purchase))
   };
 };
 
