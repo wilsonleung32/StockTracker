@@ -9,11 +9,20 @@ class Navbar extends React.Component {
   render() {
     return (
       <div>
-        <nav>
+        <h1>Stock Trader</h1>
+        <nav
+          style={{
+            display: 'flex',
+            justifyContent: 'space-evenly',
+            width: '100%',
+            height: '10vh',
+            margin: '1em'
+          }}
+        >
           <Link to="/login">Login</Link>
           <Link to="/signup">Sign Up</Link>
           <Link to="/portfolio">Portfolio</Link>
-          <Link to="/logout">Logout</Link>
+          <Link to="/transactions">Transactions</Link>
         </nav>
       </div>
     );

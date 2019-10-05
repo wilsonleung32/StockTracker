@@ -1,15 +1,9 @@
 main {
   display: flex;
-  /* align-items: center;
-  justify-content: center; */
+  align-items: center;
+  justify-content: center;
 }
 
-nav {
-  display: flex;
-  justify-content: space-evenly;
-
-  margin: 1em;
-}
 .login {
   display: flex;
   flex-direction: column;

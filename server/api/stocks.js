@@ -10,13 +10,11 @@ router.get('/all', async (req, res, next) => {
 
     const allStocks = stockNames.map(stock => {
       let ticker = stock.ticker;
-
       const promise = axios.get(
         `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${ticker}&apikey=ESNDFL30LZMAZGOS`
       );
       return promise;
     });
-
     const cleanedStocks = await Promise.all(allStocks).then(function(array) {
       return array.map((stock, idx) => ({
         ...stock.data['Global Quote'],

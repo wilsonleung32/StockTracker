@@ -1,5 +1,5 @@
 import React from 'react';
-import { Auth, Portfolio } from './';
+import { Auth, Portfolio, Transaction } from './';
 import { Switch, Route } from 'react-router-dom';
 
 export default class Routes extends React.Component {
@@ -9,11 +9,18 @@ export default class Routes extends React.Component {
   render() {
     return (
       <main>
-        <div className="major">
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
           <Switch>
             <Route path="/login" component={Auth} />
             <Route path="/signup" component={Auth} />
             <Route path="/portfolio" component={Portfolio} />
+            <Route path="/transactions" component={Transaction} />
           </Switch>
         </div>
       </main>

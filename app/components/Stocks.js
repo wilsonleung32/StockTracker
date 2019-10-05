@@ -1,5 +1,5 @@
 import React from 'react';
-import { Grid } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
 const getColor = (current, open) => {
   if (current === open) return 'grey';
   if (current < open) return 'red';
@@ -12,21 +12,21 @@ const Stocks = props => {
   );
 
   return (
-    <Grid.Row style={{ color }}>
-      <Grid.Column>
+    <Table.Row style={{ color }}>
+      <Table.Cell>
         <p>{props.stock['01. symbol']}</p>
-      </Grid.Column>
-      <Grid.Column>
+      </Table.Cell>
+      <Table.Cell>
         <p>{props.stock.quantity}</p>
-      </Grid.Column>
-      <Grid.Column>
+      </Table.Cell>
+      <Table.Cell>
         <p>
           {(
             props.stock.quantity * parseFloat(props.stock['05. price'])
           ).toFixed(2)}
         </p>
-      </Grid.Column>
-    </Grid.Row>
+      </Table.Cell>
+    </Table.Row>
   );
 };
 

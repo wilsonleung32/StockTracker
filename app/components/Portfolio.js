@@ -9,7 +9,8 @@ import {
   Input,
   Button,
   Transition,
-  Container
+  Container,
+  Table
 } from 'semantic-ui-react';
 import axios from 'axios';
 
@@ -21,93 +22,37 @@ const centering = {
 class Portfolio extends React.Component {
   constructor() {
     super();
-    this.state = {
-      ticker: '',
-      stock: {},
-      quantity: 1,
-      error: false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.search = this.search.bind(this);
   }
   componentDidMount() {
     this.props.getUser();
     this.props.getStocks();
   }
 
-  handleChange(event) {
-    this.setState({ [event.target.name]: event.target.value });
-  }
-  async search() {
-    try {
-      const { data } = await axios.get(`/stocks/${this.state.ticker}`);
-      this.setState({ stock: data['Global Quote'], error: false });
-    } catch (error) {
-      console.log('herrrreee');
-      this.setState({ error: error });
-    }
-  }
   render() {
     return (
-      <Container>
-        <Grid>
-          <Grid.Row>
-            <Grid.Column>
-              <h3>Ticker</h3>
-            </Grid.Column>
-            <Grid.Column>
-              <h3>Shares</h3>
-            </Grid.Column>
-            <Grid.Column>
-              <h3>Value</h3>
-            </Grid.Column>
+      <Container
+        style={{
+          display: 'flex',
+          justifyContent: 'space-evenly',
+          width: '45vw'
+        }}
+      >
+        <Table basic="very" style={{ margin: '2em' }}>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>Ticker</Table.HeaderCell>
+              <Table.HeaderCell>Shares</Table.HeaderCell>
+              <Table.HeaderCell>Value</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {this.props.ownedStocks.map((stock, idx) => (
+              <Stocks key={idx} stock={stock} />
+            ))}
+          </Table.Body>
+        </Table>
 
-            <Grid.Column width={3}>
-              <Input
-                placeholder="Ticker"
-                name="ticker"
-                type="string"
-                value={this.state.ticker}
-                onChange={this.handleChange}
-              />
-              <Button onClick={this.search}>Search</Button>
-              <Transition
-                visible={
-                  !this.state.error && Boolean(this.state.stock['01. symbol'])
-                }
-                duration={1000}
-                children={
-                  <Buy
-                    stock={this.state.stock}
-                    buy={this.props.buyStock}
-                    cash={this.props.user.cash}
-                    quantity={this.state.quantity}
-                    handleChange={this.handleChange}
-                  />
-                }
-              >
-                {/* <Buy
-                  stock={this.state.stock}
-                  buy={this.props.buyStock}
-                  cash={this.props.user.cash}
-                  quantity={this.state.quantity}
-                  handleChange={this.handleChange}
-                /> */}
-              </Transition>
-              {this.state.error ? (
-                <Message negative>
-                  <Message.Header>{this.state.error.message}</Message.Header>
-                  <p>{this.state.error.response.data}</p>
-                </Message>
-              ) : (
-                ''
-              )}
-            </Grid.Column>
-          </Grid.Row>
-          {this.props.ownedStocks.map((stock, idx) => (
-            <Stocks key={idx} stock={stock} />
-          ))}
-        </Grid>
+        <Buy />
       </Container>
     );
   }
@@ -121,8 +66,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getUser: () => dispatch(getLoggedIn()),
-    getStocks: () => dispatch(getStocksThunk()),
-    buyStock: purchase => dispatch(buyStockThunk(purchase))
+    getStocks: () => dispatch(getStocksThunk())
   };
 };
 
