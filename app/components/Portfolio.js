@@ -5,7 +5,7 @@ import { getStocksThunk, buyStockThunk } from '../store/stock';
 import { Stocks, Buy } from './';
 import {
   Grid,
-  Divider,
+  Message,
   Input,
   Button,
   Modal,
@@ -24,7 +24,8 @@ class Portfolio extends React.Component {
     this.state = {
       ticker: '',
       stock: {},
-      quantity: 1
+      quantity: 1,
+      error: false
     };
     this.handleChange = this.handleChange.bind(this);
     this.search = this.search.bind(this);
@@ -38,8 +39,13 @@ class Portfolio extends React.Component {
     this.setState({ [event.target.name]: event.target.value });
   }
   async search() {
-    const { data } = await axios.get(`/stocks/${this.state.ticker}`);
-    this.setState({ stock: data['Global Quote'] });
+    try {
+      const { data } = await axios.get(`/stocks/${this.state.ticker}`);
+      this.setState({ stock: data['Global Quote'], error: false });
+    } catch (error) {
+      console.log('herrrreee');
+      this.setState({ error: error });
+    }
   }
   render() {
     return (
@@ -55,6 +61,7 @@ class Portfolio extends React.Component {
             <Grid.Column>
               <h3>Value</h3>
             </Grid.Column>
+
             <Grid.Column width={3}>
               <Input
                 placeholder="Ticker"
@@ -63,8 +70,8 @@ class Portfolio extends React.Component {
                 value={this.state.ticker}
                 onChange={this.handleChange}
               />
-
-              <Modal trigger={<Button onClick={this.search}>Purchase</Button>}>
+              <Button onClick={this.search}>Search</Button>
+              <Modal trigger={<Button>Open</Button>}>
                 <Modal.Content>
                   <Buy
                     stock={this.state.stock}
@@ -75,14 +82,21 @@ class Portfolio extends React.Component {
                   />
                 </Modal.Content>
               </Modal>
+
+              {this.state.error ? (
+                <Message negative>
+                  <Message.Header>{this.state.error.message}</Message.Header>
+                  <p>{this.state.error.response.data}</p>
+                </Message>
+              ) : (
+                ''
+              )}
             </Grid.Column>
           </Grid.Row>
           {this.props.ownedStocks.map((stock, idx) => (
             <Stocks key={idx} stock={stock} />
           ))}
         </Grid>
-
-        <Container style={centering}></Container>
       </Container>
     );
   }

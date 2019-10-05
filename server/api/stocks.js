@@ -33,7 +33,10 @@ router.get('/:ticker', async (req, res, next) => {
     const { data } = await axios.get(
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.params.ticker}&apikey=ESNDFL30LZMAZGOS`
     );
-    res.json(data);
+    console.log(data);
+    if (data.Note || data['Error Message'])
+      res.status(400).send('Invalid Ticker');
+    else res.json(data);
   } catch (error) {
     next(error);
   }
@@ -54,6 +57,7 @@ router.post('/buy', async (req, res, next) => {
     await user.save();
     res.json({ cash: user.cash });
   } catch (error) {
+    console.log(error);
     next(error);
   }
 });

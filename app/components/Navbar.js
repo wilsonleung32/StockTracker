@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Link } from 'react-router-dom';
-
-export default class Navbar extends React.Component {
+import { connect } from 'react-redux';
+class Navbar extends React.Component {
   constructor() {
     super();
   }
@@ -19,3 +19,14 @@ export default class Navbar extends React.Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    user: state.user,
+    ownedStocks: state.ownedStocks
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(Navbar);
