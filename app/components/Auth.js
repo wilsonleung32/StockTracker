@@ -3,13 +3,14 @@ import axios from 'axios';
 import { connect } from 'react-redux';
 import { login, signup } from '../store/user';
 import { Redirect } from 'react-router-dom';
-import { Button, Checkbox, Form } from 'semantic-ui-react';
+import { Button, Checkbox, Form, Message } from 'semantic-ui-react';
 class Auth extends React.Component {
   constructor() {
     super();
   }
 
   render() {
+    console.log(this.props.user.error);
     return !this.props.user.email ? (
       <Form
         className="login"
@@ -24,6 +25,14 @@ class Auth extends React.Component {
           <Form.Input placeholder="password" name="password" type="password" />
         </Form.Field>
         <Button type="submit">Login</Button>
+        {this.props.user.error ? (
+          <Message negative>
+            <Message.Header>{this.props.user.error.message}</Message.Header>
+            <p>{this.props.user.error.response.data}</p>
+          </Message>
+        ) : (
+          ''
+        )}
       </Form>
     ) : (
       <Redirect to="/portfolio" />

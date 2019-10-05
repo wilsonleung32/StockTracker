@@ -5,7 +5,7 @@ const User = db.define('user', {
   email: {
     type: Sequelize.STRING,
     allowNull: false,
-    isUnique: true,
+    unique: true,
     validate: {
       isEmail: true
     }

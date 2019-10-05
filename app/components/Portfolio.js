@@ -55,33 +55,34 @@ class Portfolio extends React.Component {
             <Grid.Column>
               <h3>Value</h3>
             </Grid.Column>
+            <Grid.Column width={3}>
+              <Input
+                placeholder="Ticker"
+                name="ticker"
+                type="string"
+                value={this.state.ticker}
+                onChange={this.handleChange}
+              />
+
+              <Modal trigger={<Button onClick={this.search}>Purchase</Button>}>
+                <Modal.Content>
+                  <Buy
+                    stock={this.state.stock}
+                    buy={this.props.buyStock}
+                    cash={this.props.user.cash}
+                    quantity={this.state.quantity}
+                    handleChange={this.handleChange}
+                  />
+                </Modal.Content>
+              </Modal>
+            </Grid.Column>
           </Grid.Row>
           {this.props.ownedStocks.map((stock, idx) => (
             <Stocks key={idx} stock={stock} />
           ))}
         </Grid>
 
-        <Container style={centering}>
-          <Input
-            placeholder="Ticker"
-            name="ticker"
-            type="string"
-            value={this.state.ticker}
-            onChange={this.handleChange}
-          />
-
-          <Modal trigger={<Button onClick={this.search}>Purchase</Button>}>
-            <Modal.Content>
-              <Buy
-                stock={this.state.stock}
-                buy={this.props.buyStock}
-                cash={this.props.user.cash}
-                quantity={this.state.quantity}
-                handleChange={this.handleChange}
-              />
-            </Modal.Content>
-          </Modal>
-        </Container>
+        <Container style={centering}></Container>
       </Container>
     );
   }

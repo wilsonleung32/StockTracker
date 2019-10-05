@@ -42,9 +42,11 @@ app.use(passport.session());
 app.use(express.static(path.join(__dirname, '../public')));
 app.use('/', require('./auth'));
 app.use('/stocks', require('./api/stocks'));
+
 app.get('*', (req, res, next) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
+
 dbStore.sync();
 db.sync().then(() => {
   app.listen(port, () => {
