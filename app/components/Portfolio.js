@@ -8,7 +8,7 @@ import {
   Message,
   Input,
   Button,
-  Modal,
+  Transition,
   Container
 } from 'semantic-ui-react';
 import axios from 'axios';
@@ -71,8 +71,12 @@ class Portfolio extends React.Component {
                 onChange={this.handleChange}
               />
               <Button onClick={this.search}>Search</Button>
-              <Modal trigger={<Button>Open</Button>}>
-                <Modal.Content>
+              <Transition
+                visible={
+                  !this.state.error && Boolean(this.state.stock['01. symbol'])
+                }
+                duration={1000}
+                children={
                   <Buy
                     stock={this.state.stock}
                     buy={this.props.buyStock}
@@ -80,9 +84,16 @@ class Portfolio extends React.Component {
                     quantity={this.state.quantity}
                     handleChange={this.handleChange}
                   />
-                </Modal.Content>
-              </Modal>
-
+                }
+              >
+                {/* <Buy
+                  stock={this.state.stock}
+                  buy={this.props.buyStock}
+                  cash={this.props.user.cash}
+                  quantity={this.state.quantity}
+                  handleChange={this.handleChange}
+                /> */}
+              </Transition>
               {this.state.error ? (
                 <Message negative>
                   <Message.Header>{this.state.error.message}</Message.Header>

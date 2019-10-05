@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const User = require('../db/models/user');
 const Stock = require('../db/models/stock');
+const Transaction = require('../db/models/transaction');
 const axios = require('axios');
 
 router.get('/all', async (req, res, next) => {
@@ -28,26 +29,31 @@ router.get('/all', async (req, res, next) => {
     next(error);
   }
 });
-router.get('/:ticker', async (req, res, next) => {
+
+router.get('/transactions', async (req, res, next) => {
   try {
-    const { data } = await axios.get(
-      `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.params.ticker}&apikey=ESNDFL30LZMAZGOS`
-    );
-    console.log(data);
-    if (data.Note || data['Error Message'])
-      res.status(400).send('Invalid Ticker');
-    else res.json(data);
+    const transactions = await Transaction.findAll({
+      where: { userId: req.user.id }
+    });
+    res.json(transactions);
   } catch (error) {
     next(error);
   }
 });
-
 router.post('/buy', async (req, res, next) => {
   try {
     const stock = await Stock.findOrCreate({
       where: { userId: +req.user.id, ticker: req.body['01. symbol'] }
     });
-
+    const totalPrice = (
+      parseFloat(req.body['05. price']) * Number(req.body.quantity)
+    ).toFixed(2);
+    await Transaction.create({
+      userId: +req.user.id,
+      ticker: req.body['01. symbol'],
+      quantity: req.body.quantity,
+      totalPrice
+    });
     await stock[0].updateQuantity(Number(req.body.quantity));
     const user = await User.findByPk(req.user.id);
     user.cash -= (
@@ -58,6 +64,20 @@ router.post('/buy', async (req, res, next) => {
     res.json({ cash: user.cash });
   } catch (error) {
     console.log(error);
+    next(error);
+  }
+});
+
+router.get('/:ticker', async (req, res, next) => {
+  try {
+    const { data } = await axios.get(
+      `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.params.ticker}&apikey=ESNDFL30LZMAZGOS`
+    );
+    console.log(data);
+    if (data.Note || data['Error Message'])
+      res.status(400).send('Invalid Ticker');
+    else res.json(data);
+  } catch (error) {
     next(error);
   }
 });
