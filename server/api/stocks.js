@@ -43,25 +43,20 @@ router.post('/buy', async (req, res, next) => {
     const stock = await Stock.findOrCreate({
       where: { userId: +req.user.id, ticker: req.body['01. symbol'] }
     });
-    const totalPrice = (
-      parseFloat(req.body['05. price']) * Number(req.body.quantity)
-    ).toFixed(2);
+
     await Transaction.create({
       userId: +req.user.id,
       ticker: req.body['01. symbol'],
       quantity: req.body.quantity,
-      totalPrice
+      totalPrice: req.body.totalPrice
     });
     await stock[0].updateQuantity(Number(req.body.quantity));
     const user = await User.findByPk(req.user.id);
-    user.cash -= (
-      parseFloat(req.body['05. price']) * Number(req.body.quantity)
-    ).toFixed(2);
+    user.cash -= parseFloat(req.body.totalPrice);
 
     await user.save();
     res.json({ cash: user.cash });
   } catch (error) {
-    console.log(error);
     next(error);
   }
 });
@@ -71,7 +66,7 @@ router.get('/:ticker', async (req, res, next) => {
     const { data } = await axios.get(
       `https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.params.ticker}&apikey=ESNDFL30LZMAZGOS`
     );
-    console.log(data);
+
     if (data.Note || data['Error Message'])
       res.status(400).send('Invalid Ticker');
     else res.json(data);

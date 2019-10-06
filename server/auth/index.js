@@ -6,7 +6,12 @@ router.get('/me', async (req, res, next) => {
     if (req.user) {
       const user = await User.findByPk(req.user.id);
 
-      res.json({ email: user.email, cash: user.cash });
+      res.json({
+        id: user.id,
+        email: user.email,
+        cash: user.cash,
+        name: user.name
+      });
     } else {
       res.json({});
     }
@@ -14,7 +19,15 @@ router.get('/me', async (req, res, next) => {
     next(error);
   }
 });
-
+router.post('/logout', (req, res, next) => {
+  try {
+    req.logout();
+    req.session.destroy();
+    res.sendStatus(200);
+  } catch (error) {
+    next(error);
+  }
+});
 router.put('/login', async (req, res, next) => {
   try {
     const user = await User.findOne({ where: { email: req.body.email } });

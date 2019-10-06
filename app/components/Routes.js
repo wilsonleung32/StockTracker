@@ -1,5 +1,5 @@
 import React from 'react';
-import { Auth, Portfolio, Transaction } from './';
+import { Auth, Portfolio, Transactions, Home, NotFound } from './';
 import { Switch, Route } from 'react-router-dom';
 import { getLoggedIn } from '../store/user';
 import { connect } from 'react-redux';
@@ -16,15 +16,22 @@ class Routes extends React.Component {
         <div
           style={{
             display: 'flex',
+            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center'
           }}
         >
           <Switch>
+            <Route exact path="/" component={Home} />
             <Route path="/login" component={Auth} />
             <Route path="/signup" component={Auth} />
-            <Route path="/portfolio" component={Portfolio} />
-            <Route path="/transactions" component={Transaction} />
+            {this.props.user.id && (
+              <React.Fragment>
+                <Route path="/portfolio" component={Portfolio} />
+                <Route path="/transactions" component={Transactions} />
+              </React.Fragment>
+            )}
+            <Route component={NotFound} />
           </Switch>
         </div>
       </main>

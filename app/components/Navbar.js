@@ -2,6 +2,8 @@ import React from 'react';
 
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { Button } from 'semantic-ui-react';
+import { logout } from '../store/user';
 class Navbar extends React.Component {
   constructor() {
     super();
@@ -9,20 +11,29 @@ class Navbar extends React.Component {
   render() {
     return (
       <div>
-        <h1>Stock Trader</h1>
+        <h1 style={{ margin: '5px' }}>Stock Trader</h1>
         <nav
           style={{
             display: 'flex',
-            justifyContent: 'space-evenly',
-            width: '100%',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             height: '10vh',
             margin: '1em'
           }}
         >
-          <Link to="/login">Login</Link>
-          <Link to="/signup">Sign Up</Link>
-          <Link to="/portfolio">Portfolio</Link>
-          <Link to="/transactions">Transactions</Link>
+          <Link to="/">Home</Link>
+          {!this.props.user.id ? (
+            <React.Fragment>
+              <Link to="/login">Login</Link>
+              <Link to="/signup">Sign Up</Link>
+            </React.Fragment>
+          ) : (
+            <React.Fragment>
+              <Link to="/portfolio">Portfolio</Link>
+              <Link to="/transactions">Transactions</Link>
+              <Button onClick={() => this.props.logout}>Logout</Button>
+            </React.Fragment>
+          )}
         </nav>
       </div>
     );
@@ -30,12 +41,17 @@ class Navbar extends React.Component {
 }
 const mapStateToProps = state => {
   return {
-    user: state.user,
-    ownedStocks: state.ownedStocks
+    user: state.user
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    logout: () => dispatch(logout())
   };
 };
 
 export default connect(
   mapStateToProps,
-  null
+  mapDispatchToProps
 )(Navbar);

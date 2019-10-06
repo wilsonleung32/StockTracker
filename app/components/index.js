@@ -5,5 +5,7 @@ export { default as Portfolio } from './Portfolio';
 
 export { default as Stocks } from './Stocks';
 export { default as Buy } from './Buy';
-export { default as Transaction } from './Transactions';
+export { default as Transactions } from './Transactions';
 export { default as AllStocks } from './AllStocks';
+export { default as Home } from './Home';
+export { default as NotFound } from './NotFound';

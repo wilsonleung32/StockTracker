@@ -1,9 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { buyStockThunk } from '../store/stock';
-
 import {
-  Grid,
   Message,
   Input,
   Button,
@@ -38,7 +36,7 @@ class Buy extends React.Component {
   }
   async search() {
     try {
-      const { data } = await axios.get(`/stocks/${this.state.ticker}`);
+      const { data } = await axios.get(`/api/stocks/${this.state.ticker}`);
       this.setState({ stock: data['Global Quote'], error: false });
     } catch (error) {
       this.setState({ error: error });
@@ -46,9 +44,10 @@ class Buy extends React.Component {
   }
   render() {
     const unitPrice = parseFloat(this.state.stock['05. price']).toFixed(2);
-    const totalCost = (unitPrice * this.state.quantity).toFixed(2);
+    const totalPrice = (unitPrice * this.state.quantity).toFixed(2);
     return (
       <Container style={centering}>
+        <h1>Cash: ${this.props.user.cash.toFixed(2)}</h1>
         <Input
           placeholder="Ticker"
           name="ticker"
@@ -70,40 +69,36 @@ class Buy extends React.Component {
             visible={Boolean(this.state.stock['01. symbol'])}
             duration={750}
           >
-            <Container
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '95%'
-              }}
-            >
-              <Card>
-                <Card.Meta>Unit Price: ${unitPrice}</Card.Meta>
-                <Card.Content>Total: ${totalCost}</Card.Content>
-                <Card.Content>
-                  <Input
-                    type="number"
-                    name="quantity"
-                    value={this.state.quantity}
-                    onChange={this.handleChange}
-                    min={1}
-                  />
-                  <Button
-                    style={{ margin: '1em' }}
-                    onClick={() =>
-                      this.props.buyStock({
-                        ...this.state.stock,
-                        quantity: this.state.quantity
-                      })
-                    }
-                    disabled={this.props.user.cash < totalCost}
-                  >
-                    Buy
-                  </Button>
-                </Card.Content>
-              </Card>
-            </Container>
+            <Card>
+              <Card.Content>
+                {' '}
+                Unit Price: ${unitPrice} Total: ${totalPrice}{' '}
+              </Card.Content>
+              <Card.Content>
+                <Input
+                  type="number"
+                  name="quantity"
+                  value={this.state.quantity}
+                  onChange={this.handleChange}
+                  min={1}
+                />
+                <Button
+                  style={{ margin: '1em' }}
+                  onClick={() =>
+                    this.props.buyStock({
+                      ...this.state.stock,
+                      quantity: this.state.quantity,
+                      totalPrice
+                    })
+                  }
+                  disabled={
+                    this.props.user.cash < totalPrice || this.state.quantity < 1
+                  }
+                >
+                  Buy
+                </Button>
+              </Card.Content>
+            </Card>
           </Transition>
         )}
       </Container>

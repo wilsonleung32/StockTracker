@@ -1,30 +1,46 @@
 import axios from 'axios';
+
 const user = { error: false };
 const GET_USER = 'GET_USER';
 const UPDATE_CASH = 'UPDATE_CASH';
 const SEND_ERROR = 'SEND_ERROR';
+
 const getUser = user => ({ type: GET_USER, user });
-export const updateCash = cash => ({ type: UPDATE_CASH, cash });
+
 const sendError = error => ({ type: SEND_ERROR, error });
+
+export const updateCash = cash => ({ type: UPDATE_CASH, cash });
+
 export const login = credentials => async dispatch => {
   try {
-    const res = await axios.put('/login', credentials);
+    const res = await axios.put('/auth/login', credentials);
     dispatch(getUser(res.data));
   } catch (error) {
     dispatch(sendError(error));
   }
 };
+
 export const signup = credentials => async dispatch => {
   try {
-    const res = await axios.post('/signup', credentials);
+    const res = await axios.post('/auth/signup', credentials);
     dispatch(getUser(res.data));
   } catch (error) {
     dispatch(sendError(error));
   }
 };
+
+export const logout = () => async dispatch => {
+  try {
+    await axios.post('/auth/logout');
+    dispatch(getUser({}));
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const getLoggedIn = () => async dispatch => {
   try {
-    const { data } = await axios.get('/me');
+    const { data } = await axios.get('/auth/me');
 
     dispatch(getUser(data));
   } catch (error) {

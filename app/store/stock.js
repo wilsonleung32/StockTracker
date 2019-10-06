@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { updateCash } from './user';
+
 const GET_STOCKS = 'GET_STOCKS';
 
 const ownedStocks = [];
@@ -8,7 +9,7 @@ const getStocks = stocks => ({ type: GET_STOCKS, stocks });
 
 export const getStocksThunk = () => async dispatch => {
   try {
-    const { data } = await axios.get('/stocks/all');
+    const { data } = await axios.get('/api/stocks/all');
     dispatch(getStocks(data));
   } catch (error) {
     console.error(error);
@@ -16,8 +17,7 @@ export const getStocksThunk = () => async dispatch => {
 };
 export const buyStockThunk = purchase => async dispatch => {
   try {
-    console.log(purchase, 'helooooooo');
-    const { data } = await axios.post('/stocks/buy', purchase);
+    const { data } = await axios.post('/api/stocks/buy', purchase);
     dispatch(updateCash(data.cash));
     dispatch(getStocksThunk());
   } catch (error) {

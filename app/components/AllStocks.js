@@ -4,7 +4,7 @@ import { Stocks } from './';
 
 const AllStocks = props => {
   return (
-    <Table basic="very">
+    <Table basic="very" style={{ width: '45vw', margin: '2em' }}>
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Ticker</Table.HeaderCell>

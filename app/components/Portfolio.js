@@ -4,11 +4,6 @@ import { getStocksThunk } from '../store/stock';
 import { Buy, AllStocks } from './';
 import { Container } from 'semantic-ui-react';
 
-const centering = {
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center'
-};
 class Portfolio extends React.Component {
   constructor() {
     super();
@@ -23,7 +18,7 @@ class Portfolio extends React.Component {
         style={{
           display: 'flex',
           justifyContent: 'space-evenly',
-          width: '45vw'
+          width: '100%'
         }}
       >
         <AllStocks stocks={this.props.ownedStocks} />
