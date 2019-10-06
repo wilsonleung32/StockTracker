@@ -31,7 +31,7 @@ class Navbar extends React.Component {
             <React.Fragment>
               <Link to="/portfolio">Portfolio</Link>
               <Link to="/transactions">Transactions</Link>
-              <Button onClick={() => this.props.logout}>Logout</Button>
+              <Button onClick={this.props.logout}>Logout</Button>
             </React.Fragment>
           )}
         </nav>
