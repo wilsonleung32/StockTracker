@@ -6,25 +6,26 @@ const getColor = (current, open) => {
   return 'green';
 };
 const Stocks = props => {
-  const color = getColor(
-    parseFloat(props.stock['05. price']),
-    parseFloat(props.stock['02. open'])
-  );
-
+  const color =
+    props.color ||
+    getColor(
+      parseFloat(props.stock['05. price']),
+      parseFloat(props.stock['02. open'])
+    );
+  const ticker = props.stock.ticker || props.stock['01. symbol'];
+  const total =
+    props.stock.totalPrice ||
+    (props.stock.quantity * parseFloat(props.stock['05. price'])).toFixed(2);
   return (
     <Table.Row style={{ color }}>
       <Table.Cell>
-        <p>{props.stock['01. symbol']}</p>
+        <p>{ticker}</p>
       </Table.Cell>
       <Table.Cell>
         <p>{props.stock.quantity}</p>
       </Table.Cell>
       <Table.Cell>
-        <p>
-          {(
-            props.stock.quantity * parseFloat(props.stock['05. price'])
-          ).toFixed(2)}
-        </p>
+        <p>{total}</p>
       </Table.Cell>
     </Table.Row>
   );

@@ -1,10 +1,14 @@
 import React from 'react';
 import { Auth, Portfolio, Transaction } from './';
 import { Switch, Route } from 'react-router-dom';
-
-export default class Routes extends React.Component {
+import { getLoggedIn } from '../store/user';
+import { connect } from 'react-redux';
+class Routes extends React.Component {
   constructor() {
     super();
+  }
+  componentDidMount() {
+    this.props.getUser();
   }
   render() {
     return (
@@ -27,3 +31,19 @@ export default class Routes extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    user: state.user
+  };
+};
+const mapDispatchToProps = dispatch => {
+  return {
+    getUser: () => dispatch(getLoggedIn())
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Routes);

@@ -9,7 +9,8 @@ import {
   Container
 } from 'semantic-ui-react';
 import axios from 'axios';
-
+import { Stocks, AllStocks } from './';
+// import stock from '../store/stock';
 const centering = {
   display: 'flex',
   flexDirection: 'column',
@@ -29,24 +30,21 @@ export default class Transactions extends React.Component {
 
   render() {
     return (
-      <Table basic="very">
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell>Ticker</Table.HeaderCell>
-            <Table.HeaderCell>Shares</Table.HeaderCell>
-            <Table.HeaderCell>Total Cost</Table.HeaderCell>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {this.state.transactions.map(transaction => (
-            <Table.Row key={transaction.id}>
-              <Table.Cell>{transaction.ticker}</Table.Cell>
-              <Table.Cell>{transaction.quantity}</Table.Cell>
-              <Table.Cell>{transaction.totalPrice}</Table.Cell>
-            </Table.Row>
-          ))}
-        </Table.Body>
-      </Table>
+      //   <Table basic="very">
+      //     <Table.Header>
+      //       <Table.Row>
+      //         <Table.HeaderCell>Ticker</Table.HeaderCell>
+      //         <Table.HeaderCell>Shares</Table.HeaderCell>
+      //         <Table.HeaderCell>Value</Table.HeaderCell>
+      //       </Table.Row>
+      //     </Table.Header>
+      //     <Table.Body>
+      //       {this.state.transactions.map(stock => (
+      //         <Stocks key={stock.id} stock={stock} color="black" />
+      //       ))}
+      //     </Table.Body>
+      //   </Table>
+      <AllStocks stocks={this.state.transactions} color="black" />
     );
   }
 }
