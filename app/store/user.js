@@ -1,10 +1,11 @@
 import axios from 'axios';
 
-const user = { error: false };
+const user = { error: false, total: 0 };
 const GET_USER = 'GET_USER';
 const UPDATE_CASH = 'UPDATE_CASH';
 const SEND_ERROR = 'SEND_ERROR';
-
+const UPDATE_TOTAL = 'UPDATE_TOTAL';
+export const updateTotal = total => ({ type: UPDATE_TOTAL, total });
 const getUser = user => ({ type: GET_USER, user });
 
 const sendError = error => ({ type: SEND_ERROR, error });
@@ -51,11 +52,13 @@ export const getLoggedIn = () => async dispatch => {
 export default function(state = user, action) {
   switch (action.type) {
     case GET_USER:
-      return action.user;
+      return { ...state, ...action.user };
     case UPDATE_CASH:
       return { ...state, cash: action.cash };
     case SEND_ERROR:
       return { ...state, error: action.error };
+    case UPDATE_TOTAL:
+      return { ...state, total: action.total };
     default:
       return state;
   }

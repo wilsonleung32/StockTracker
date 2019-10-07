@@ -21,7 +21,18 @@ class Portfolio extends React.Component {
           width: '100%'
         }}
       >
-        <AllStocks stocks={this.props.ownedStocks} />
+        <Container
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            margin: '1em'
+          }}
+        >
+          <h1>Total Portfolio Value ${this.props.user.total.toFixed(2)}</h1>
+
+          <AllStocks stocks={this.props.ownedStocks} />
+        </Container>
         <Buy />
       </Container>
     );

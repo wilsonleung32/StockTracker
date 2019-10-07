@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { updateCash } from './user';
+import { updateCash, updateTotal } from './user';
 
 const GET_STOCKS = 'GET_STOCKS';
 
@@ -11,6 +11,15 @@ export const getStocksThunk = () => async dispatch => {
   try {
     const { data } = await axios.get('/api/stocks/all');
     dispatch(getStocks(data));
+
+    const total = data.reduce((acc, curr) => {
+      const val = Number(
+        (parseFloat(curr['05. price']) * curr.quantity).toFixed(2)
+      );
+      return acc + val;
+    }, 0);
+
+    dispatch(updateTotal(total));
   } catch (error) {
     console.error(error);
   }

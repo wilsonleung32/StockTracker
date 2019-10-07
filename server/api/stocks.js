@@ -31,7 +31,8 @@ router.get('/all', async (req, res, next) => {
 router.get('/transactions', async (req, res, next) => {
   try {
     const transactions = await Transaction.findAll({
-      where: { userId: req.user.id }
+      where: { userId: req.user.id },
+      order: [['createdAt', 'DESC']]
     });
     res.json(transactions);
   } catch (error) {

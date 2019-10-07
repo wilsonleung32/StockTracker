@@ -15,7 +15,7 @@ const centering = {
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  margin: '2em',
+  margin: '1em',
   width: '40vw'
 };
 class Buy extends React.Component {
