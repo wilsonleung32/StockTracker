@@ -1,13 +1,14 @@
 import axios from 'axios';
 
-const user = { error: false, total: 0 };
+const defaultUser = { error: false, total: 0 };
 const GET_USER = 'GET_USER';
 const UPDATE_CASH = 'UPDATE_CASH';
 const SEND_ERROR = 'SEND_ERROR';
 const UPDATE_TOTAL = 'UPDATE_TOTAL';
+const DELETE_USER = 'DELETE_USER';
 export const updateTotal = total => ({ type: UPDATE_TOTAL, total });
 const getUser = user => ({ type: GET_USER, user });
-
+const deleteUser = () => ({ type: DELETE_USER });
 const sendError = error => ({ type: SEND_ERROR, error });
 
 export const updateCash = cash => ({ type: UPDATE_CASH, cash });
@@ -33,7 +34,7 @@ export const signup = credentials => async dispatch => {
 export const logout = () => async dispatch => {
   try {
     await axios.post('/auth/logout');
-    dispatch(getUser({}));
+    dispatch(deleteUser());
   } catch (error) {
     console.log(error);
   }
@@ -49,7 +50,7 @@ export const getLoggedIn = () => async dispatch => {
   }
 };
 
-export default function(state = user, action) {
+export default function(state = defaultUser, action) {
   switch (action.type) {
     case GET_USER:
       return { ...state, ...action.user };
@@ -59,6 +60,8 @@ export default function(state = user, action) {
       return { ...state, error: action.error };
     case UPDATE_TOTAL:
       return { ...state, total: action.total };
+    case DELETE_USER:
+      return { error: false, total: 0 };
     default:
       return state;
   }

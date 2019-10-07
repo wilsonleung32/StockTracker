@@ -34,7 +34,16 @@ router.put('/login', async (req, res, next) => {
     if (!user || user.password !== req.body.password) {
       res.status(401).send('Wrong username/password');
     } else {
-      req.login(user, error => (error ? next(error) : res.json(user)));
+      req.login(user, error =>
+        error
+          ? next(error)
+          : res.json({
+              id: user.id,
+              email: user.email,
+              cash: user.cash,
+              name: user.name
+            })
+      );
     }
   } catch (error) {
     next(error);
@@ -44,7 +53,16 @@ router.put('/login', async (req, res, next) => {
 router.post('/signup', async (req, res, next) => {
   try {
     const user = await User.create(req.body);
-    req.login(user, error => (error ? next(error) : res.json(user)));
+    req.login(user, error =>
+      error
+        ? next(error)
+        : res.json({
+            id: user.id,
+            email: user.email,
+            cash: user.cash,
+            name: user.name
+          })
+    );
   } catch (error) {
     const message = error.errors[0].message;
 

@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { Button } from 'semantic-ui-react';
 import { logout } from '../store/user';
+import { withRouter } from 'react-router';
 class Navbar extends React.Component {
   constructor() {
     super();
@@ -31,7 +32,14 @@ class Navbar extends React.Component {
             <React.Fragment>
               <Link to="/portfolio">Portfolio</Link>
               <Link to="/transactions">Transactions</Link>
-              <Button onClick={this.props.logout}>Logout</Button>
+              <Button
+                onClick={() => {
+                  this.props.logout();
+                  this.props.history.push('/');
+                }}
+              >
+                Logout
+              </Button>
             </React.Fragment>
           )}
         </nav>
@@ -51,7 +59,9 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Navbar);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Navbar)
+);
